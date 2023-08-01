@@ -319,6 +319,9 @@ with st.sidebar :
     
     if 'coef_filtre' not in st.session_state :
         st.session_state['coef_filtre'] = 1
+
+    if 'lang' not in st.session_state :
+        st.session_state['lang'] = 'Français'
         
     
         
@@ -346,10 +349,12 @@ with st.sidebar :
             
    # if st.session_state.eco != True :
     st.session_state.choose = st.selectbox("Estimations", ("Page d'accueil","HFO", "GPL","Comparaison", "Proposition d'optimisation"))
+    
     #else : 
          #st.session_state.choose = st.selectbox("Estimations", ("Page d'accueil","HFO", "GPL","Comparaison"))
     
     st.divider()
+    st.session_state.lang = st.selectbox( "Langues",("Français", "English"))
     
     #st.write("**Veuillez saisir les informations suivantes :** ")
     
@@ -381,9 +386,7 @@ with st.sidebar :
     
     
     #st.session_state.conso = st.number_input("**Consommation mensuelle de Fioul (en tonnes):**")
-    
-    #lang = st.selectbox( "Langues",("Français", "English"))
-    
+
     #scol1, scol2 = st.columns([1.8,3])
     
 
@@ -398,7 +401,7 @@ with st.sidebar :
     
 
 #French language
-if fr :
+if st.session_state.lang == 'Français' :
     st.session_state.rand_gpl = np.random.randint(3,6)
     if st.session_state.choose == "Page d'accueil":
         #st.write(st.session_state.c)
@@ -1379,7 +1382,7 @@ if fr :
 
         
 #English language
-if en :       
+if st.session_state.lang == 'English' :       
     val = st.button("Generate the invoive", on_click = gen_pdf())
     if val == True : 
         with open("/Users/nass/Documents/pdf_generated.pdf","rb") as file : 
