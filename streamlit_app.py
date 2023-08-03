@@ -9,7 +9,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 #import altair as alt
-#import plotly.express as px
+import plotly.express as px
 
 #from fonctions import calcul_conso_gpl,rendement, calcul_energy_hfo, price_hfo, price_gpl, euro_to_dollar, dollar_to_CFA, dollar_to_ZAR, dollar_to_din_tun, dollar_to_mur, space_in_numbers, courbe
 #from gen_pdf import gen_pdf
@@ -505,7 +505,7 @@ if st.session_state.lang == 'Français' :
             elif st.session_state.meth == 'Hybride' :
                 st.session_state.nb_employee = st.number_input("Nombre d'employés à cet usage ?")
                 st.session_state.presta = st.number_input("Coût de la maintenance effectuée par le prestataire :")
-                st.session_state.gpl_cost_maint = st.session_state.salary * st.session_state.nb_employee + st.session_state.presta
+                st.session_state.cost_hfo_maint = st.session_state.salary * st.session_state.nb_employee + st.session_state.presta
                 st.session_state.other_unknow = st.checkbox("**Je ne connais pas les coûts** ")
                 st.write("")
                 st.write("")
@@ -831,13 +831,13 @@ if st.session_state.lang == 'Français' :
             
             if st.session_state.model_want : 
                 c1, c2 = st.columns(2)
-                c1.metric("Voici le coût de la molécule HFO :", str(cost_hfo) + st.session_state.money)
-                c2.metric("Voici le coût des OPEX de l'installation :", str(st.session_state.hfo_model_cost_opex) + st.session_state.money)
+                c1.metric("Voici le coût de la molécule HFO :", str(round(cost_hfo)) + st.session_state.money)
+                c2.metric("Voici le coût des OPEX de l'installation :", str(round(st.session_state.hfo_model_cost_opex)) + st.session_state.money)
             else : 
                 c1, c2, c3 = st.columns(3)
-                c1.metric("Voici le coût de la molécule HFO :", str(cost_hfo) + st.session_state.money)
-                c2.metric("Voici le coût énergétique lié au HFO :", str(cost_en) + st.session_state.money)
-                c3.metric("Coût annuel moyen lié à la maintenance du site :", str(st.session_state.cost_hfo_maint) + st.session_state.money)
+                c1.metric("Voici le coût de la molécule HFO :", str(round(cost_hfo)) + st.session_state.money)
+                c2.metric("Voici le coût énergétique lié au HFO :", str(round(cost_en)) + st.session_state.money)
+                c3.metric("Coût annuel moyen lié à la maintenance du site :", str(round(st.session_state.cost_hfo_maint)) + st.session_state.money)
                 
                #st.write("Voici le coût de la molécule HFO :")
                 #st.write(str(cost_hfo) + st.session_state.money)
@@ -865,17 +865,17 @@ if st.session_state.lang == 'Français' :
                 
                 
                 if st.session_state.nett :
-                    c1.metric("Coût total lié au nettoyage du site", str(st.session_state.nett_cost) + st.session_state.money)
+                    c1.metric("Coût total lié au nettoyage du site", str(round(st.session_state.nett_cost)) + st.session_state.money)
                     
                     if st.session_state.sum_nett != 0:
-                        c2.metric("Temps de production perdu :", str(st.session_state.sum_nett)+" heures")
+                        c2.metric("Temps de production perdu :", str(round(st.session_state.sum_nett))+" heures")
                 
                 else:
                     c1.metric("Coût total lié au nettoyage du site", str(0) + st.session_state.money)
                     c2.metric("Temps de production perdu :", str(0)+" heures")
                 
                 if st.session_state.sum_add != 0 :
-                    c3.metric("Coût total des additifs", str(st.session_state.sum_add) + st.session_state.money)
+                    c3.metric("Coût total des additifs", str(round(st.session_state.sum_add)) + st.session_state.money)
                 else : 
                     c3.metric("Coût total des additifs", str(0) + st.session_state.money)
                
