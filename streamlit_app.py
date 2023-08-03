@@ -9,7 +9,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import altair as alt
-#import plotly.express as px
+import plotly.express as px
 
 #from fonctions import calcul_conso_gpl,rendement, calcul_energy_hfo, price_hfo, price_gpl, euro_to_dollar, dollar_to_CFA, dollar_to_ZAR, dollar_to_din_tun, dollar_to_mur, space_in_numbers, courbe
 #from gen_pdf import gen_pdf
@@ -1345,33 +1345,33 @@ if st.session_state.lang == 'Français' :
             else :
                 st.subheader("Améliorer son rendement à l'aide d'un économiseur")
             
-            co1, co2 = st.columns(2,gap="medium")
-            with co1:
-                st.title("Economiseur HFO")
-                st.write("On peut gagner 5% de consommation de HFO à l'aide d'un économiseur sur ce type de fuel")
-                st.subheader("Voici la consommation espérée en utilisant un économiseur :")
-                st.title(str(round(0.95*st.session_state.conso))+ " tonnes par an")
-                st.write("")
-                st.write("")
-                colon1, colon2 = st.columns(2)
-                with colon1 :
-                    st.metric(label = "Coût molécule sans économiseur ", value = (str(round(st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money) )
-                with colon2 :
-                    st.metric(label = "Coût molécule avec économiseur ", value = (str(round(0.95 * st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money),delta = str(round(0.05 * st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money)
-            with co2 : 
-                st.title("Economiseur GPL")
-                st.write("On peut gagner 7.5% de consommation de HFO à l'aide d'un économiseur sur ce type de fuel")
-                st.subheader("Voici la consommation espérée en utilisant un économiseur :")
-                st.title(str(round(0.925*round(st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800))))+ "tonnes par an")
-                st.write("")
-                st.write("")
-                colo1, colo2 = st.columns(2)
-                with colo1:
-                    st.metric(label = "Coût molécule sans économiseur ", value = (str(round(round(st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800))))+ st.session_state.money) )
-                with colo2:
-                    st.metric(label = "Coût molécule avec économiseur ", value = (str(round(0.925 * st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800)))+ st.session_state.money),delta = str(round(0.075 * st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800)))+ st.session_state.money)
-            with st.expander("Information investissement"):
-                st.write("A noter que généralement, le coût d'un économiseur pour le HFO est **2 fois plus élevé** que pour le GPL")
+                co1, co2 = st.columns(2,gap="medium")
+                with co1:
+                    st.title("Economiseur HFO")
+                    st.write("On peut gagner 5% de consommation de HFO à l'aide d'un économiseur sur ce type de fuel")
+                    st.subheader("Voici la consommation espérée en utilisant un économiseur :")
+                    st.title(str(round(0.95*st.session_state.conso))+ " tonnes par an")
+                    st.write("")
+                    st.write("")
+                    colon1, colon2 = st.columns(2)
+                    with colon1 :
+                        st.metric(label = "Coût molécule sans économiseur ", value = (str(round(st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money) )
+                    with colon2 :
+                        st.metric(label = "Coût molécule avec économiseur ", value = (str(round(0.95 * st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money),delta = str(round(0.05 * st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money)
+                with co2 : 
+                    st.title("Economiseur GPL")
+                    st.write("On peut gagner 7.5% de consommation de HFO à l'aide d'un économiseur sur ce type de fuel")
+                    st.subheader("Voici la consommation espérée en utilisant un économiseur :")
+                    st.title(str(round(0.925*round(st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800))))+ "tonnes par an")
+                    st.write("")
+                    st.write("")
+                    colo1, colo2 = st.columns(2)
+                    with colo1:
+                        st.metric(label = "Coût molécule sans économiseur ", value = (str(round(round(st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800))))+ st.session_state.money) )
+                    with colo2:
+                        st.metric(label = "Coût molécule avec économiseur ", value = (str(round(0.925 * st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800)))+ st.session_state.money),delta = str(round(0.075 * st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800)))+ st.session_state.money)
+                with st.expander("Information investissement"):
+                    st.write("A noter que généralement, le coût d'un économiseur pour le HFO est **2 fois plus élevé** que pour le GPL")
             
         else :  
             st.write("Veuillez renseigner votre consommation")
