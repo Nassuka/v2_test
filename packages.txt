@@ -2,3 +2,4 @@ numpy-dev
 pandas-dev
 altair-dev
 plotly-dev
+express-dev
