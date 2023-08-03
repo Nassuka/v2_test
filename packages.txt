@@ -1,0 +1,4 @@
+numpy-dev
+pandas-dev
+altair-dev
+plotly-dev
