@@ -6,12 +6,12 @@ import altair as alt
 import plotly.express as px
 import os
 
-from fonctions import calcul_conso_gpl,rendement, calcul_energy_hfo, price_hfo, price_gpl, euro_to_dollar, dollar_to_CFA, dollar_to_ZAR, dollar_to_din_tun, dollar_to_mur, space_in_numbers, courbe
-from gen_pdf import gen_pdf
-from bokeh.plotting import figure
+#from fonctions import calcul_conso_gpl,rendement, calcul_energy_hfo, price_hfo, price_gpl, euro_to_dollar, dollar_to_CFA, dollar_to_ZAR, dollar_to_din_tun, dollar_to_mur, space_in_numbers, courbe
+#from gen_pdf import gen_pdf
+#from bokeh.plotting import figure
 
-import altair as alt
-from vega_datasets import data
+#import altair as alt
+#from vega_datasets import data
 
 #Tab icon and name
 st.set_page_config(page_title='Comparaison HFO vs GPL',page_icon='Logo_TotalEnergies.png', initial_sidebar_state="expanded", layout = "wide")
