@@ -1,27 +1,22 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue May 30 09:32:03 2023
 
-@author: nass
-"""
 import streamlit as st
 import numpy as np
 import pandas as pd
-#import altair as alt
+import altair as alt
 import plotly.express as px
+import os
 
-#from fonctions import calcul_conso_gpl,rendement, calcul_energy_hfo, price_hfo, price_gpl, euro_to_dollar, dollar_to_CFA, dollar_to_ZAR, dollar_to_din_tun, dollar_to_mur, space_in_numbers, courbe
-#from gen_pdf import gen_pdf
-#from bokeh.plotting import figure
+from fonctions import calcul_conso_gpl,rendement, calcul_energy_hfo, price_hfo, price_gpl, euro_to_dollar, dollar_to_CFA, dollar_to_ZAR, dollar_to_din_tun, dollar_to_mur, space_in_numbers, courbe
+from gen_pdf import gen_pdf
+from bokeh.plotting import figure
 
-#import altair as alt
-#from vega_datasets import data
+import altair as alt
+from vega_datasets import data
 
-#Icône et nom de l'onglet
+#Tab icon and name
 st.set_page_config(page_title='Comparaison HFO vs GPL',page_icon='Logo_TotalEnergies.png', initial_sidebar_state="expanded", layout = "wide")
 
-#Titre de l'application
+#Application title
 st.header('Application de comparaison des coûts de fonctionnement entre le HFO et le GPL')
 
 
@@ -32,9 +27,7 @@ with st.sidebar :
     st.header('Menu')
     st.divider()
     
-    
-
-    
+    #Instantiation of variables
     if 'en' not in st.session_state : 
         st.session_state['en'] = False
 
@@ -319,13 +312,10 @@ with st.sidebar :
     
     if 'coef_filtre' not in st.session_state :
         st.session_state['coef_filtre'] = 1
-
-    if 'lang' not in st.session_state :
-        st.session_state['lang'] = 'Français'
         
     
         
-    
+    #Functions to change language
     def change_fr_to_en() : 
         if st.session_state.fr : 
             st.session_state.en = False
@@ -347,65 +337,29 @@ with st.sidebar :
             st.session_state.fr == True
             
             
-   # if st.session_state.eco != True :
+    #Selection Menu
     st.session_state.choose = st.selectbox("Estimations", ("Page d'accueil","HFO", "GPL","Comparaison", "Proposition d'optimisation"))
-    
-    #else : 
-         #st.session_state.choose = st.selectbox("Estimations", ("Page d'accueil","HFO", "GPL","Comparaison"))
-    
     st.divider()
-    st.session_state.lang = st.selectbox( "Langues",("Français", "English"))
     
-    #st.write("**Veuillez saisir les informations suivantes :** ")
+    #Select language
+    lang = st.selectbox( "Langues",("Français", "English"))
     
-    #country = st.selectbox("**Pays**",("-- Selectionné --","Afrique du Sud", "Côte d'Ivoire", "France","Ile Maurice", "Sénégal", "Tunisie","Autres"), )
-    #franc_cfa = ["Côte d'Ivoire", "Sénégal"]
-    #euro = ["France"]
-    #dollar = ["Autres"]
-    #ZAR = ["Afrique du Sud"]
-    #dina_tun = ["Tunisie"]
-    #roupie_mauricienne =["Ile Maurice"]
+    scol1, scol2 = st.columns([1.8,3])
+    scol2 .image("/Users/nass/Documents/Streamlit-app/drap_fr.png",width = 30)
+    scol2.write("")
+    scol2 .image("/Users/nass/Documents/Streamlit-app/drap_en.webp",width = 30)
     
-    #if country in franc_cfa :
-        #st.session_state.money = " F"
-   
-    #elif country in euro :
-        #st.session_state.money = " €"
-    
-    #elif country in dollar : 
-        #st.session_state = " $"
-    
-    #elif country in ZAR :
-        #st.session_state.money = " R"
-    
-    #elif country in dina_tun :
-        #st.session_state.money = " DT"
-        
-    #elif country in roupie_mauricienne :
-        #st.session_state.money = " MUR"
-    
-    
-    #st.session_state.conso = st.number_input("**Consommation mensuelle de Fioul (en tonnes):**")
-
-    #scol1, scol2 = st.columns([1.8,3])
-    
-
-    #scol2 .image("/Users/nass/Documents/Streamlit-app/drap_fr.png",width = 30)
-    #scol2.write("")
-    #scol2 .image("/Users/nass/Documents/Streamlit-app/drap_en.webp",width = 30)
-    
-    #fr  = scol1.checkbox("Français" , key = "fr", on_change = change_fr_to_en)
-    #scol1.write("")
-    #scol1.write("")
-    #en = scol1.checkbox("English", key = "en", on_change = change_en_to_fr)
+    fr  = scol1.checkbox("Français" , key = "fr", on_change = change_fr_to_en)
+    scol1.write("")
+    scol1.write("")
+    en = scol1.checkbox("English", key = "en", on_change = change_en_to_fr)
     
 
 #French language
-if st.session_state.lang == 'Français' :
-    st.session_state.rand_gpl = np.random.randint(3,6)
+if fr :
+    #Home page
     if st.session_state.choose == "Page d'accueil":
-        #st.write(st.session_state.c)
-        #with st.form("my_form"):
+        #Enter informations
         st.subheader("Veuillez entrer les informations ci-dessous :")
         fcol1, fcol2 = st.columns(2)
         st.session_state.conso = fcol1.number_input("**Consommation annuelle de Fioul (en tonnes) :**")
@@ -413,29 +367,24 @@ if st.session_state.lang == 'Français' :
         country = st.selectbox("**Pays**",("-- Selectionné --","Afrique du Sud", "Côte d'Ivoire", "France","Ile Maurice", "Sénégal", "Tunisie","Autres"), )
         st.session_state.pci_hfo = st.number_input("PCI du Fioul lourd(kWh/kg) :")
         st.session_state.teneur_soufre = st.number_input("Teneur en soufre dans le fioul (%)")
+        #Use OPEX Modelisation
         st.session_state.model_want = st.checkbox("Je souhaite utiliser une approximation des OPEX")
         
         if st.session_state.model_want == False : 
             st.session_state.model_use = st.checkbox("Je ne connais pas tous les coûts suivants")
            
             col1, col2 = st.columns(2)
-            
             st.session_state.pui = col1.number_input("**Puissance de l'installation (en KW) :**")
             st.session_state.price_kWh = col2.number_input("**Coût d'un Kwh :**")
             st.session_state.nb_h_per_day = col1.number_input("**Nombre d'heures de fonctionnement de l'installation par jour :**", min_value=0, max_value=24)
             st.session_state.nb_day_per_week = col2.number_input("**Nombre de jours de fonctionnement de l'installation par semaine :**", min_value=0, max_value=7, step= 1)
-            #st.session_state.salary = col2.number_input("**Salaire des employés (monnaie locale) :**")
-            
-            #st.session_state.nb_fil = st.number_input("**Nombre de filtres :**", step = 1)
-           
-            #st.session_state.nb_ram = st.number_input("**Nombre de ramonages par an :**", step = 1)
             
             st.session_state.eau = st.number_input("Combien de m3 d'eau traités pour la maintenance de la chaudière :", step = 1)
             col11, col22 = st.columns(2)
             st.session_state.eau_l = col11.number_input("Coût d'un m3 d'eau traité :")
             st.session_state.eau_nb = col22.number_input("Combien de fois par an l'achat de cet eau est effectuée :")
             
-            
+            #Choice of money and estimated salary for employees
             franc_cfa = ["Côte d'Ivoire", "Sénégal"]
             euro = ["France"]
             dollar = ["Autres"]
@@ -464,7 +413,6 @@ if st.session_state.lang == 'Français' :
                 st.session_state.salary = 22404
            
             
-            
             if country in franc_cfa :
                 st.session_state.money = " F"
            
@@ -483,10 +431,8 @@ if st.session_state.lang == 'Français' :
             elif country in roupie_mauricienne :
                 st.session_state.money = " MUR"
                     
-                #submitted = st.form_submit_button("Soumettre")
-            
-            #st.write(st.session_state.conso)
-            
+                
+            #Maintenance
             st.session_state.meth = st.radio("Par quel méthode effectuez-vous votre maintenance ?", ('Personnel interne', 'Prestataire','Hybride', 'Autres'))
             if st.session_state.meth == 'Personnel interne' : 
                 st.session_state.nb_employee = st.number_input("**Nombre d'employés à cet usage :** ", step = 1)
@@ -522,6 +468,7 @@ if st.session_state.lang == 'Français' :
                     st.write("")
             
             
+            #Scarpe
             st.session_state.ram = st.checkbox("Faites-vous des ramonages ?")
             if st.session_state.ram : 
                 st.session_state.nb_ram = st.number_input("**Fréquence de ramonage (en mois) :**")
@@ -529,7 +476,9 @@ if st.session_state.lang == 'Français' :
                 st.write("")
                 st.write("")
                 st.write("")
-                
+            
+            
+            #Filters
             st.session_state.filter = st.checkbox("Avez-vous des filtres ?")
             if st.session_state.filter : 
                  st.session_state.nb_fil = st.number_input("**Nombre de filtres :**", step = 1)  
@@ -542,7 +491,8 @@ if st.session_state.lang == 'Français' :
                      st.write("")
             else : 
                 st.session_state.coef_filtre = 0.9
-                     
+            
+            #Change of parts
             st.session_state.pieces = st.checkbox("Avez-vous changé des pièces durant les 10 dernières années ?")
             if st.session_state.pieces :
                 st.session_state.change_pcs = st.text_input("Nom de l'équipement changé :")
@@ -561,19 +511,14 @@ if st.session_state.lang == 'Français' :
                     st.session_state.chx_maint = "Oui"
                 else : 
                     st.session_state.chx_maint = "Non"
-                    
-                #st.write(st.session_state.change_pcs)
+
+
                 st.session_state.but_pcs = st.button("Ajouter dans le tableau")
                 
+                #Put the values into a list
                 if st.session_state.but_pcs :
                     st.session_state.c += [np.transpose(np.array([st.session_state.change_pcs,st.session_state.price_pcs, st.session_state.fre_chgm, st.session_state.time_int,st.session_state.tp_yes_no, st.session_state.chx_maint])).tolist()]
-                    #st.session_state.c += [st.session_state.change_pcs,0,0]
-                    
-                    #st.write(st.session_state.c[0])
-                    #k = st.session_state.c[0].values()
-                    #st.write(k)
-                    #st.session_state.cl = list(st.session_state.c[0].values())
-                    #st.write(st.session_state.cl)
+
                     
                 if len(st.session_state.c) != 0 : 
                     df1 = pd.DataFrame(data = st.session_state.c, index = ('Pièces %d' % i for i in range(1,1 + len(st.session_state.c))), columns = ["Nom de la pièce", "Prix de la pièce", "Fréquence de changement de la pièce (en mois)", "Durée de l'intervention (en heures)", "Cela empiète-t-il sur la production ?(Oui ou Non)", "Coût compris dans celui de la mainteneace "])
@@ -584,10 +529,8 @@ if st.session_state.lang == 'Français' :
                         st.session_state.c[i][2] = npdf1[i,2]
                         st.session_state.c[i][3] = npdf1[i,3]
                         st.session_state.c[i][4] = npdf1[i,4]
-                        st.session_state.c[i][5] = npdf1[i,5]
-                        #st.write(st.session_state.c)
-                        #st.write(st.session_state.c[i][1])
-                        #st.write(st.session_state.c[i][2])
+                        
+                    #Sum of costs of changement
                     if (float(st.session_state.c[-1][2]) != 0) and (float(st.session_state.c[-1][1]) != 0) and (st.session_state.c[-1][5] == "Non"):
                         st.session_state.sum_pcs += ((float(st.session_state.c[-1][1]) * (12/float(st.session_state.c[-1][2]))))
                 st.write("")
@@ -595,7 +538,7 @@ if st.session_state.lang == 'Français' :
                 st.write("")
             
           
-            
+            #Equipment cleaning
             st.session_state.nett = st.checkbox("Faites-vous du nettoyage (Filtres, brûleurs)?")
             if st.session_state.nett :
                 st.session_state.nett_meth = st.radio("Par quelle moyen nettoyez-vous votre installation ?", ('Opérateurs interne', 'Prestataire'))
@@ -630,12 +573,11 @@ if st.session_state.lang == 'Français' :
                             st.session_state.ne[i][1] = npdf2[i,1]
                             st.session_state.ne[i][2] = npdf2[i,2]
                             st.session_state.ne[i][3] = npdf2[i,3]
-                            #st.write(st.session_state.ne[i][0])
-                            #st.write(st.session_state.ne[i][1])
-                            #st.write(st.session_state.ne[i][2])
+                        
+                        #Time of Production Downtime
                         if (float(st.session_state.ne[-1][2]) != 0) and (float(st.session_state.ne[-1][1]) != 0) and (st.session_state.ne[-1][3] == 'Oui'):
                             st.session_state.sum_nett += (float(st.session_state.ne[-1][1]) * (12/ float(st.session_state.ne[-1][2])))
-                            #st.write(st.session_state.sum_nett)
+                         
                 st.write("")
                 st.write("")
                 st.write("")
@@ -668,16 +610,16 @@ if st.session_state.lang == 'Français' :
                         st.session_state.ne[i][1] = npdf2[i,1]
                         st.session_state.ne[i][2] = npdf2[i,2]
                         st.session_state.ne[i][3] = npdf2[i,3]
-                        #st.write(st.session_state.ne[i][0])
-                        #st.write(st.session_state.ne[i][1])
-                        #st.write(st.session_state.ne[i][2])
+
+                    #Time of Production Downtime
                     if (float(st.session_state.ne[-1][2]) != 0) and (float(st.session_state.ne[-1][1]) != 0) and (st.session_state.ne[-1][3] == 'Oui'):
                         st.session_state.sum_nett += (float(st.session_state.ne[-1][1]) * (12/ float(st.session_state.ne[-1][2])))
-                        #st.write(st.session_state.sum_nett)
+                     
                 st.write("")
                 st.write("")
                 st.write("")
             
+            #Additives
             st.session_state.additif = st.checkbox("Utilisez-vous des additifs ?")
             if st.session_state.additif:
                 st.session_state.name_add = st.text_input("Nom de l'additif :")
@@ -695,94 +637,52 @@ if st.session_state.lang == 'Français' :
                     for i in range(len(st.session_state.add)):
                         st.session_state.add[i][1] = npdf_add[i,1]
                         st.session_state.add[i][2] = npdf_add[i,2]
-                        #st.session_state.add[i][3] = npdf2[i,3]
-                        #st.write(st.session_state.ne[i][0])
-                        #st.write(st.session_state.ne[i][1])
-                        #st.write(st.session_state.ne[i][2])
+                        
+                    #Cost of additives
                     if (float(st.session_state.add[-1][2]) != 0) and (float(st.session_state.add[-1][1]) != 0) :
                         st.session_state.sum_add += (float(st.session_state.add[-1][1]) * (float(st.session_state.add[-1][2])))
-                        #st.write(st.session_state.sum_nett)
+
                 st.write("")
                 st.write("")
                 st.write("")
-                
+            
+            #Number Boilers for Production Stoppages
             st.session_state.chaud = st.checkbox("Possédez-vous plusieurs chaudières ?")
             if st.session_state.chaud : 
                 st.session_state.nb_chaud = st.number_input("Combien en possédez-vous ?", step = 1)
                 st.write("")
                 st.write("")
                 st.write("")
-            
-            st.session_state.eco = st.checkbox("Possédez-vous un économiseur ?")
-                #df_add = pd.DataFrame(data = np.array([[0,0],[0,0]]), columns = ["Combien de litres d'additif pour" , "combien de litres de HFO"])
-                #udf_add = st.data_editor(df_add)
-            
-                        #st.write(st.session_state.sum_nett)  
-    
-                            
-                    #if st.session_state.ne[-1][2] != 0 and st.session_state.ne[-1][1] != 0:
-                        #st.session_state.sum_pcs += float(st.session_state.ne[-1][2]) * float(st.session_state.c[-1][1]/10)
-            
-            #if st.session_state.nett :
-                #st.session_state.nett_meth = st.radio("Par quelle moyen nettoyez-vous votre installation ?", ('Opérateurs interne', 'Prestataire'))
-                #if st.session_state.nett_meth == 'Opérateurs interne':
-                   # st.session_state.same_empl = st.checkbox("Ces opérateurs sont-ils différents de ceux s'occupant de la maintenance ?")
-                    #if st.session_state.same_empl : 
-                        #st.session_state.nett_choice = st.multiselect("Que nettoyez-vous ?",["Filtres", "Tuyauteries", "Brûleurs", "Autres"])
-                        #if len(st.session_state.nett_choice) != 0:
-                            #for i in range(len(st.session_state.nett_choice)) :
-                                #st.session_state.n += [st.session_state.nett_choice[-1]]
-                                
-                        #for i in range(len(st.session_state.n)):
-                           # st.session_state.ne += [st.session_state.n[i]]
-                            
-                        #st.write(st.session_state.n)
-                        #st.write(len(st.session_state.ne))
-                        #st.write(st.session_state.ne)
-            
-            
-            
-            
-            #st.write(st.session_state.c)
-            #st.write(st.session_state.sum_pcs)
-            
-            
-            #st.write(udf1)
-            #st.write(udf)
-            #st.write(st.session_state)
-            
-            
-            
-            #if submitted :
-                    #val = st.button("Générer la facture", on_click = gen_pdf())
-                    #if val == True : 
-               # gen_pdf()
-               # with open("/Users/nass/Documents/Streamlit-app/pdf_generated.pdf","rb") as file : 
-                    
-                            #data = "/Users/nass/Documents/generated_pdf.pdf"
-                            #st.download_button("Télécharger la facture", data  = data, file_name='facture.pdf', mime = 'document/pdf')
+                
+                
+            #Possession of an Economizer
+            st.session_state.eco = st.checkbox("Possédez-vous un économiseur ?")  
                             
         else :
             if st.session_state.conso != 0:
+                #Using OPEX Modelisation
                 st.session_state.hfo_model_cost_opex = round(st.session_state.conso * 230.73/((st.session_state.conso/12)**0.264))
             else : 
+                #HFO Consumption needs  to calculate OPEX 
                 st.write("Veuillez renseigner votre consommation de fioul")
                 
-                
+    #HFO Page           
     if st.session_state.choose == "HFO" : 
-        #st.write(st.session_state)
-        #st.write(st.session_state.conso)
         if st.session_state.conso != 0:
+            #Using OPEX Modelisation
             if st.session_state.model_use :
                 st.session_state.hfo_model_cost_opex = round(st.session_state.conso * 230.73/((st.session_state.conso/12)**0.264))
             
+            #Calculate the energy of HFO
             en_hfo = round(st.session_state.conso * st.session_state.pci_hfo*1000)
+            #Save the value to convert in GJ
             st.session_state.en_hfo_GJ = en_hfo
             
-            
-            #if st.session_state.money == " €":
+            #Calculate the cost of HFO
             cost_hfo = round(st.session_state.conso * st.session_state.price_hfo)
+            #Calculate the cost of energy
             cost_en = round(st.session_state.price_kWh * st.session_state.pui * st.session_state.nb_h_per_day * st.session_state.nb_day_per_week*52.1429)
+            
             if st.session_state.meth == 'Prestataire' and st.session_state.presta != 0:
                 st.session_state.cost_hfo_maint = round(st.session_state.presta)  
             elif st.session_state.meth == 'Personnel interne':
@@ -803,49 +703,20 @@ if st.session_state.lang == 'Français' :
                 elif st.session_state.money == " MUR":
                     st.session_state.cost_hfo_maint = round(dollar_to_mur(euro_to_dollar(2.19)) * st.session_state.conso)
                     
-            
-            #else :
-                #On convertit les euros en dollars
-                #cost_hfo = round(st.session_state.conso * st.session_state.price_hfo)
-                #cost_hfo = round(euro_to_dollar(cost_hfo))
-                
-                #if st.session_state.money == " F":
-                    #cost_hfo = round(dollar_to_CFA(cost_hfo),2)
-                
-                #elif st.session_state.money == " R":
-                    #cost_hfo = round(dollar_to_ZAR(cost_hfo),2)
-                    
-                #elif st.session_state.money == " DT":
-                    #cost_hfo = round(dollar_to_din_tun(cost_hfo),2)
-                    
-                #elif st.session_state.money == " MUR":
-                    #cost_hfo = round(dollar_to_mur(cost_hfo),2)"""
-               
-            #st.write("Voici l'énergie produit par le HFO :")
-            #st.write (space_in_numbers(str(en_hfo))+"kWh")
-            
-            #st.write(cost_hfo)
-            #st.write(cost_en)
-            #st.write(cost_mtn)
-            #st.write(st.session_state.sum_nett)
-            
+            #Display only the HFO cost and OPEX
             if st.session_state.model_want : 
                 c1, c2 = st.columns(2)
                 c1.metric("Voici le coût de la molécule HFO :", str(round(cost_hfo)) + st.session_state.money)
                 c2.metric("Voici le coût des OPEX de l'installation :", str(round(st.session_state.hfo_model_cost_opex)) + st.session_state.money)
-            else : 
+           
+            #Display all parts of OPEX
+            else :
                 c1, c2, c3 = st.columns(3)
                 c1.metric("Voici le coût de la molécule HFO :", str(round(cost_hfo)) + st.session_state.money)
                 c2.metric("Voici le coût énergétique lié au HFO :", str(round(cost_en)) + st.session_state.money)
                 c3.metric("Coût annuel moyen lié à la maintenance du site :", str(round(st.session_state.cost_hfo_maint)) + st.session_state.money)
                 
-               #st.write("Voici le coût de la molécule HFO :")
-                #st.write(str(cost_hfo) + st.session_state.money)
-                #st.write("Voici le coût énergétique lié au HFO :")
-                #st.write(str(cost_en) + st.session_state.money)
-               # st.write("Coût annuel moyen lié à la maintenance du site :")
-                #st.write(str(cost_mtn) + st.session_state.money)
-                
+                        
                 if st.session_state.eau !=0:
                     c2.metric("Coût annuel global de l'eau traitée :", str(round(st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb)) + st.session_state.money)
                 else :
@@ -880,20 +751,18 @@ if st.session_state.lang == 'Français' :
                     c3.metric("Coût total des additifs", str(0) + st.session_state.money)
                
 
-                    
-            
+               
                 
-            
+            #Summarize with total cost
             st.divider()
             col1, col2 = st.columns([2,1.5])
             st.subheader("Coût annuel total de fonctionnement de votre installation HFO : ")
             if st.session_state.hfo_model_cost_opex < (cost_en + st.session_state.cost_hfo_maint + st.session_state.sum_pcs + st.session_state.nett_cost + st.session_state.sum_add + (st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb) + (st.session_state.ram_cost * st.session_state.nb_ram)) :
                 st.title(str(round(cost_hfo + cost_en + st.session_state.cost_hfo_maint + st.session_state.sum_pcs + st.session_state.nett_cost + st.session_state.sum_add + (st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb) + (st.session_state.ram_cost * st.session_state.nb_ram))) + st.session_state.money)
             else :
-                st.title(str(cost_hfo + st.session_state.hfo_model_cost_opex))
+                st.title(str(cost_hfo + st.session_state.hfo_model_cost_opex)+ st.session_state.money)
             
             st.subheader("Coût global d'une tonne de HFO : ")
-            #st.title(str(round((cost_hfo + cost_en + cost_mtn + st.session_state.sum_pcs + st.session_state.nett_cost + st.session_state.sum_add + (st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb) + (st.session_state.ram_cost * st.session_state.nb_ram)))/st.session_state.conso) + st.session_state.money)
             if st.session_state.hfo_model_cost_opex < (cost_en + st.session_state.cost_hfo_maint + st.session_state.sum_pcs + st.session_state.nett_cost + st.session_state.sum_add + (st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb) + (st.session_state.ram_cost * st.session_state.nb_ram)) :
                 st.session_state.tot_cost_hfo = round(cost_hfo + cost_en + st.session_state.cost_hfo_maint + st.session_state.sum_pcs + st.session_state.nett_cost + st.session_state.sum_add + (st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb) + (st.session_state.ram_cost * (st.session_state.nb_ram/st.session_state.conso)))
                 st.title(str(round(st.session_state.tot_cost_hfo/st.session_state.conso)) + st.session_state.money)
@@ -909,6 +778,7 @@ if st.session_state.lang == 'Français' :
                 st.write("")
                 st.write("")
             
+            #Show the distribution in OPEX
             if cost_en != 0 or st.session_state.cost_hfo_maint != 0 or st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb != 0 or st.session_state.ram_cost * st.session_state.nb_ram != 0 or st.session_state.sum_pcs != 0 or st.session_state.nett_cost != 0 or st.session_state.sum_add != 0 :
                 cost_list = np.array([cost_en,st.session_state.cost_hfo_maint, st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb, st.session_state.ram_cost * st.session_state.nb_ram, st.session_state.sum_pcs, st.session_state.nett_cost, st.session_state.sum_add])
                 data_chart=[]
@@ -918,6 +788,7 @@ if st.session_state.lang == 'Français' :
                 chart_data_hfo = pd.DataFrame(data= data_chart, columns = ["Coût énergétique", "Coût maintenance du site", "Coût de l'eau","Coût ramonages", "Coût pièces", "Coût nettoyages", "Coût additifs"])
                 st.bar_chart(chart_data_hfo)
                 
+            #Pie chart to put in evidence the part of OPEX by using HFO
             if st.session_state.model_want or (st.session_state.hfo_model_cost_opex > (cost_en + st.session_state.cost_hfo_maint + st.session_state.sum_pcs + st.session_state.nett_cost + st.session_state.sum_add + (st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb) + (st.session_state.ram_cost * st.session_state.nb_ram))):
                 df_pie = pd.DataFrame(data = np.array([[cost_hfo, "Molécule"],[st.session_state.hfo_model_cost_opex, "OPEX"]]), index=["Coût de la molécule", "Coût des OPEX"], columns = ["Coût", "Coût associé"])
                 fig = px.pie(df_pie, values= 'Coût', names = 'Coût associé')
@@ -934,9 +805,8 @@ if st.session_state.lang == 'Français' :
                     st.write(df_pie)
                 with pie:
                     st.write(fig)
-                #(cost_en + st.session_state.cost_hfo_maint + st.session_state.sum_pcs + st.session_state.nett_cost + st.session_state.sum_add + (st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb) + (st.session_state.ram_cost * st.session_state.nb_ram)
-            
-             
+                
+            #List the disadvantages of HFO 
             with st.expander("Inconvénients liés au HFO"):
                 c1,c2 = st.columns(2)
                 with c1:
@@ -968,15 +838,14 @@ if st.session_state.lang == 'Français' :
                     st.write(" -  Problèmes de voisinages")
                 
         else :
-            def go_base():
-                st.session_state.choose = "Page d'accueil"
-                return st.session_state.choose 
+            #Demand to complete the Home page information
             st.write("Veuillez renseigner les informations de la page d'accueil ")
-            #st.button("Aller à la page d'accueil", on_click = go_base())
-        
-        
+            
+    
+    #GPL Page
     if st.session_state.choose == "GPL" : 
         if st.session_state.conso != 0 :
+            #Definition of an efficiency coefficient as a function of the number of chimney sweeps
             if (st.session_state.nb_ram == 0) or (st.session_state.ram == False) or (st.session_state.nb_ram > 18):
                 st.session_state.rend_ram = 0.85
                 
@@ -986,13 +855,17 @@ if st.session_state.lang == 'Français' :
             elif (st.session_state.nb_ram >5)  or (st.session_state.nb_ram < 18):
                 st.session_state.rend_ram = 0.9
             
+            #Definition of a coefficient to model the best combustion of LPG
             rend_rand = st.session_state.rand_gpl
             coeff_rand = (100-rend_rand)/100
             
+            
+            #Range of GPL price
             if st.session_state.money == " €":
                 st.session_state.max_gpl_price = 2000
                 st.session_state.base_gpl_price = 500
                 
+            #Choose money
             elif st.session_state.money == " $":
                 st.session_state.max_gpl_price = round(euro_to_dollar(st.session_state.max_gpl_price))
                 st.session_state.base_gpl_price = round(euro_to_dollar(st.session_state.base_gpl_price))
@@ -1009,16 +882,20 @@ if st.session_state.lang == 'Français' :
                 st.session_state.max_gpl_price = round(dollar_to_mur(euro_to_dollar(st.session_state.max_gpl_price)))
                 st.session_state.base_gpl_price = round(dollar_to_mur(euro_to_dollar(st.session_state.base_gpl_price)))
             
+            #Choice of GPL price
             st.session_state.gpl_price = st.slider("Prix de la tonne de GPL :", 0,st.session_state.max_gpl_price , st.session_state.base_gpl_price)
-            quantity_gpl = round(st.session_state.coef_filtre * st.session_state.rend_ram * coeff_rand *1000*st.session_state.pci_hfo * (st.session_state.conso/(12800)))
+            #Estimate the equivalent GPL quantity
+            quantity_gpl = round(st.session_state.coef_filtre * st.session_state.rend_ram * 0.96 *1000*st.session_state.pci_hfo * (st.session_state.conso/(12800)))
+            
             st.subheader("Pour la même quantité d'énergie, voici la consommation de GPL équivalente :")
             st.title(str(quantity_gpl)+" tonnes")
+            #Calculate the cost of GPL
             cost_gpl = quantity_gpl * st.session_state.gpl_price
             st.subheader("Pour la même quantité d'énergie, voici le coût de la molécule GPL :")
             st.title(str(cost_gpl) + st.session_state.money)
             
             
-            
+            #Estimate the cost of a GPL installation maintenance
             st.session_state.gpl_maint_choice = st.radio("Par quel méthode effectuez-vous votre maintenance ?", ('Personnel interne', 'Prestataire','Hybride', 'Autres'))
             if st.session_state.gpl_maint_choice == 'Personnel interne' : 
                 st.session_state.gpl_nb_empl = st.number_input("**Nombre d'employés à cet usage :** ", step = 1)
@@ -1078,17 +955,21 @@ if st.session_state.lang == 'Français' :
                     st.write("")
                     st.write("")
                     st.write("")
-            #di = {"GPL": cost_gpl + st.session_state.gpl_cost_maint,"HFO" : st.session_state.tot_cost_hfo}
-            #df_comp = pd.DataFrame(np.array(list(di.values())).T, columns=list(di.keys()))       
+                    
+            
+            #Bar chart to compare directly GPL and HFO total cost      
             st.bar_chart({"GPL": cost_gpl + st.session_state.gpl_cost_maint,"HFO" : st.session_state.tot_cost_hfo})
-            
             st.session_state.tot_cost_gpl = cost_gpl + st.session_state.gpl_cost_maint
-            
+
+
+            #Visualize the evolution of cost during time (Random evolution)
+            #Same evolution
             data_line1 = []
             data_line_gpl =[]
             data_line_hfo =[]
             data_line_hfo += [st.session_state.tot_cost_hfo]
             data_line_gpl += [cost_gpl + st.session_state.gpl_cost_maint]
+            
             for i in range(10) : 
                 pos_neg = np.random.randint(0,3)
                 rand_prog = np.random.randint(0,11)
@@ -1102,16 +983,16 @@ if st.session_state.lang == 'Français' :
                     data_line_hfo += [(data_line_hfo[-1])* coeff_prog]
             
             data_line1=np.array([data_line_gpl,data_line_hfo]).T
-            
-            #st.write(data_line1)
             df_data_line1= pd.DataFrame(data_line1, columns=["GPL","HFO"])
             st.line_chart(df_data_line1)
             
+            #Different evolutions
             data_line2 = []
             data_line_gpl2 =[]
             data_line_hfo2 =[]
             data_line_hfo2 += [st.session_state.tot_cost_hfo]
             data_line_gpl2 += [cost_gpl + st.session_state.gpl_cost_maint]
+            
             for i in range(10) : 
                 pos_neg = np.random.randint(0,3)
                 rand_prog = np.random.randint(0,11)
@@ -1133,85 +1014,21 @@ if st.session_state.lang == 'Français' :
                     data_line_hfo2 += [(data_line_hfo2[-1])* coeff_prog]
                     
             data_line2=np.array([data_line_gpl2,data_line_hfo2]).T
-            
-            
-            
-            #st.write(data_line1)
             df_data_line2= pd.DataFrame(data_line2, columns=["GPL","HFO"])
             st.line_chart(df_data_line2)
-            #scale = alt.Scale(domain = ["Coût total GPL","Coût total HFO"], range = ["#1f77b4","#aec7e8"])
-            #click = alt.selection_multi(encodings=["color"])
-            #color = alt.Color( scale = scale)
-            #brush = alt.selection_interval(encodings=["x"])
-            #bars =(alt.Chart().mark_bar().encode(x = "Energie", y = "Coût total", color= alt.condition(click, color, alt.value("lightgray"))).transform_filter(brush).properties(width=550).add_selection(click))
-            #test_bar_chart = pd.DataFrame(np.array([[st.session_state.tot_cost_gpl],[st.session_state.tot_cost_hfo]]).T)
-            #, columns = ["Coût total GPL", "Coût total HFO"]
-            #chart = alt.vconcat(data = test_bar_chart, title = "Visualisation des coûts annuels des installations GPL et HFO")
-            
-            #st.altair_chart(chart,theme="streamlit", use_container_width = True)
-
             
         else :
+            #Demand to complete the Home page information
             st.write("Veuillez renseigner votre consommation ")
             
             
-            
+    #Comparison Page       
     if st.session_state.choose == "Comparaison" : 
-        
-        #source = data.population.url
-
-        #slider = alt.binding_range(min=1850, max=2000, step=10)
-        #select_year = alt.selection_point(name='year', fields=['year'],
-                                          # bind=slider, value={'year': 2000})
-
-        #base = alt.Chart(source).add_params(
-         #   select_year
-        #).transform_filter(
-        #    select_year
-        #).transform_calculate(
-         #   gender=alt.expr.if_(alt.datum.sex == 1, 'Female', 'Male')
-        #).properties(
-        #    width=250
-        #)
-        
-
-       # color_scale = alt.Scale(domain=['HFO', 'GPL'],
-                                #range=['#fb4a61', '#b41f2c'])
-        
-        #left = encode(
-            #alt.Y('age:O').axis(None),
-            #alt.X('sum(people):Q')
-                #.title('Coûts')
-                #.sort('descending'),
-           # alt.Color('gender:N')
-                #.scale(color_scale)
-                #.legend(None)
-        #).mark_bar().properties(title='HFO')
-        
-        
-        #middle = base.encode(
-            #alt.Y('age:O').axis(None),
-            #alt.Text('age:Q'),
-        #).mark_text().properties(width=20)
-
-        #right = base.transform_filter(
-           # alt.datum.gender == 'Male'
-       # ).encode(
-           # alt.Y('age:O').axis(None),
-            #alt.X('sum(people):Q').title('population'),
-            #alt.Color('gender:N').scale(color_scale).legend(None)
-        #).mark_bar().properties(title='Male')
-
-        #st.altair_chart(alt.hconcat(left, middle,right, spacing=1),use_container_width=True )
-        
-        #st.altair_chart(alt.hconcat(left,right, spacing=1),use_container_width=True)
-        
+        #Comparison of costs and emissions
         st.title("Comparaison des énergies")
-        
         col1, col2 = st.columns(2)
         with col1 :
             st.title("HFO")
-            #st.subheader("Coûts totaux du HFO")
             st.metric("Coûts totaux du HFO", value = str(st.session_state.tot_cost_hfo)+ st.session_state.money)
             st.write("")
             st.metric("Coût de la molécule", value = str(round(st.session_state.conso * st.session_state.price_hfo)) + st.session_state.money)
@@ -1226,13 +1043,6 @@ if st.session_state.lang == 'Français' :
             st.write("")
             st.metric("Facteur d'émissions de CO2", value = str(round(3.12 * st.session_state.conso)) + " tonnes")
             st.write("")
-            #st.metric("Facteur CO2(en tonnes)", value = round((319*st.session_state.en_hfo_GJ/1000)/1000))
-            #if st.session_state.teneur_soufre > 2:
-               # st.session_state.con_soufre = 1557.5*((st.session_state.teneur_soufre)**2) - 4382.5 *st.session_state.teneur_soufre + 5940
-           # else :
-                #st.session_state.con_soufre =2.642*643.45*st.session_state.teneur_soufre**0.8941
-                
-            #st.metric("Concentration de SOx dans les fumées", value = str(round(st.session_state.con_soufre)) + " mg/Nm3")
             st.metric("Concentration de SOx dans les fumées", value = str(round(1700 * st.session_state.teneur_soufre)) + " mg/Nm3")
             st.write("")
             st.metric("Facteur d'émissions de NOx", value = str(round(0.0036*st.session_state.en_hfo_GJ*1967/1000)) + " kg")
@@ -1242,9 +1052,8 @@ if st.session_state.lang == 'Français' :
        
         with col2 :
             st.title("GPL")
-            #st.subheader("Coûts totaux du HFO")
-            st.metric("Coûts totaux du GPL", value = str(round(st.session_state.gpl_cost_maint + st.session_state.gpl_price * st.session_state.rend_ram * 0.96 *1000*st.session_state.pci_hfo * (st.session_state.conso/(12800)))) + st.session_state.money, delta = str(round((st.session_state.gpl_cost_maint + st.session_state.gpl_price * st.session_state.rend_ram * 0.96 *1000*st.session_state.pci_hfo * (st.session_state.conso/(12800))) - st.session_state.tot_cost_hfo ))+ st.session_state.money, delta_color= "inverse")
-            st.metric("Coût de la molécule", value = str(round(st.session_state.gpl_price * st.session_state.rend_ram * 0.96 *1000*st.session_state.pci_hfo * (st.session_state.conso/(12800)))) + st.session_state.money, delta = str(round((st.session_state.gpl_price * st.session_state.rend_ram * 0.96 *1000*st.session_state.pci_hfo * (st.session_state.conso/(12800)))- st.session_state.conso * st.session_state.price_hfo)) + st.session_state.money, delta_color= "inverse")
+            st.metric("Coûts totaux du GPL", value = str(round(st.session_state.gpl_cost_maint + st.session_state.gpl_price * (st.session_state.coef_filtre * st.session_state.rend_ram * 0.96 *1000*st.session_state.pci_hfo * (st.session_state.conso/(12800))))) + st.session_state.money, delta = str(round((st.session_state.gpl_cost_maint + st.session_state.gpl_price * (st.session_state.coef_filtre * st.session_state.rend_ram * 0.96 *1000*st.session_state.pci_hfo * (st.session_state.conso/(12800)))) - st.session_state.tot_cost_hfo ))+ st.session_state.money, delta_color= "inverse")
+            st.metric("Coût de la molécule", value = str(round(st.session_state.gpl_price * (st.session_state.coef_filtre * st.session_state.rend_ram * 0.96 *1000*st.session_state.pci_hfo * (st.session_state.conso/(12800))))) + st.session_state.money, delta = str(round((st.session_state.gpl_price * (st.session_state.coef_filtre * st.session_state.rend_ram * 0.96 *1000*st.session_state.pci_hfo * (st.session_state.conso/(12800))))- st.session_state.conso * st.session_state.price_hfo)) + st.session_state.money, delta_color= "inverse")
             
             if st.session_state.model_want or (st.session_state.hfo_model_cost_opex > ((st.session_state.price_kWh * st.session_state.pui * st.session_state.nb_h_per_day * st.session_state.nb_day_per_week*52.1429) + st.session_state.cost_hfo_maint + st.session_state.sum_pcs + st.session_state.nett_cost + st.session_state.sum_add + (st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb) + (st.session_state.ram_cost * st.session_state.nb_ram))):
                 st.metric("Coût des OPEX", value = str(round(st.session_state.gpl_cost_maint))+ st.session_state.money, delta = str(round((st.session_state.gpl_cost_maint)- st.session_state.hfo_model_cost_opex)) + st.session_state.money,  delta_color= "inverse") 
@@ -1252,12 +1061,11 @@ if st.session_state.lang == 'Français' :
                 st.metric("Coût des OPEX", value = str(round(st.session_state.gpl_cost_maint))+ st.session_state.money, delta = str(round((st.session_state.gpl_cost_maint)- ((st.session_state.price_kWh * st.session_state.pui * st.session_state.nb_h_per_day * st.session_state.nb_day_per_week*52.1429) + st.session_state.cost_hfo_maint + st.session_state.sum_pcs + st.session_state.nett_cost + st.session_state.sum_add + (st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb) + (st.session_state.ram_cost * st.session_state.nb_ram)))) + st.session_state.money,  delta_color= "inverse") 
            
             st.metric("Facteur d'émissions de CO2", value = str(round(63.1 * st.session_state.en_hfo_GJ * 0.0036/1000)) +" tonnes", delta = str(round((63.1 * st.session_state.en_hfo_GJ * 0.0036/1000)-(3.12 * st.session_state.conso))) + " tonnes", delta_color= "inverse")
-            #st.metric("Emission de SOx", value = str(round(2.2 *0.0036*st.session_state.en_hfo_GJ/1000 ))+ " kg", delta= str(round((2.2 *0.0036*st.session_state.en_hfo_GJ/1000)-(0))) )
             st.metric("Concentration de SOx dans les fumées", value = str(325) + " mg/Nm3", delta = str(round((2.2 *0.0036*st.session_state.en_hfo_GJ/1000)-(1700 * st.session_state.teneur_soufre)))+ " mg/Nm3", delta_color= "inverse")
             st.metric("Facteur d'émissions de NOx", value = str(round(0.0036*st.session_state.en_hfo_GJ*60/1000))+ " kg", delta = str(round((0.0036*st.session_state.en_hfo_GJ*60/1000)-(0.0036*st.session_state.en_hfo_GJ*1967/1000)))+ " kg", delta_color= "inverse")
             st.metric("Facteur d'émissions de CO", value = str(round(0.5*0.0036*st.session_state.en_hfo_GJ*92/1000))+ " kg", delta = str(round((0.5*0.0036*st.session_state.en_hfo_GJ*92/1000)-(0.0036*st.session_state.en_hfo_GJ*92/1000)))+" kg", delta_color= "inverse")
             
-            
+        #Save data to create an Excel File
         if st.session_state.hfo_model_cost_opex < (st.session_state.cost_hfo_maint + round(st.session_state.price_kWh * st.session_state.pui * st.session_state.nb_h_per_day * st.session_state.nb_day_per_week*52.1429)
         + st.session_state.sum_pcs + st.session_state.nett_cost + st.session_state.sum_add + (st.session_state.eau * st.session_state.eau_l * st.session_state.eau_nb) + (st.session_state.ram_cost * st.session_state.nb_ram)) :
             data_excel = {'Pays' : st.session_state.country,
@@ -1293,7 +1101,6 @@ if st.session_state.lang == 'Français' :
         def create_excel(data):
         # Créez un DataFrame à partir du dictionnaire
             df = pd.DataFrame(data)
-            
             # Spécifiez le nom du fichier Excel que vous souhaitez créer
             nom_fichier_excel = 'donnees.xlsx'
             #Créer un fichier Excel
@@ -1301,88 +1108,71 @@ if st.session_state.lang == 'Français' :
             # Enregistrez le DataFrame dans un fichier Excel
             df.to_excel(nom_fichier_excel, index=False)
             
+        def create_excel1(data):
+            # Créez un DataFrame à partir du dictionnaire
+            df = pd.DataFrame(data)
+        
+            # Spécifiez le nom du fichier Excel que vous souhaitez créer
+            nom_fichier_excel = 'donnees.xlsx'
+        
+            # Obtenir le chemin absolu du répertoire courant
+            chemin_repertoire_courant = os.getcwd()
+        
+            # Concaténer le nom du fichier Excel avec le chemin absolu du répertoire courant
+            chemin_complet_fichier_excel = os.path.join(chemin_repertoire_courant, nom_fichier_excel)
+        
+            # Enregistrez le DataFrame dans un fichier Excel dans le répertoire courant
+            df.to_excel(chemin_complet_fichier_excel, index=False)
             
+        exl = st.button("Générer un bilan Excel", on_click = create_excel1(data_excel))
         
-        exl = st.button("Générer un bilan Excel", on_click = create_excel(data_excel))
-        #if exl :
-            #st.download_button("Télécharger le fichier", data  = pd.DataFrame(data_excel).to_excel("donnees.xlsx", index=False), file_name='Excel.xlsx', mime = "excl/xlsx")
-    
-       #st.write("Ici sera afficher des grahiques comme l'amortissement sur 10 ans entre le HFO et le GPL, compoaraison de la quatité de CO2 économiser")
-        #chart_data = pd.DataFrame(courbe(1,2,20), columns=["a","b"])
-        #st.bar_chart(chart_data)
-        #p = figure(title = 'Le rendement en fonction des mois', x_axis_label = 'Mois', y_axis_label = 'Rendement')
-        #x = [i for i in range(60)]
-        #p.line(x ,rendement(60), legend_label = 'Rendement', line_width = 4)
-        #st.bokeh_chart(p, use_container_width = True)
-        #k= np.zeros((2,60))
-        
-        #for i in range(60):
-            #k[0][i]= rendement(60)[i]
-            #k[1][i] = 1
-        
-        #k=k.T
-        
-        #ind = [i for i in range(60)]
-        #k = np.array([rendement(60), 1 for i in range(60)]).T
-        #dfp = pd.DataFrame(k,index = ind, columns = ['rendement HFO', 'rendement GPL'])
-        #st.subheader("Rendement en fonction du temps (mois) :")
-        #st.line_chart(dfp)
-        #st.area_chart(dfp)
-        #st.bar_chart(dfp)
-            
-        
-        #CO2_HFO = round((st.session_state.conso * 25440) / 8000)
-        #CO2_GPL = round((st.session_state.conso * 19614) / 8000)
-        #st.write(CO2_HFO)    
-        #st.metric(label = "Emission de CO2 eq", value = str(CO2_GPL) + " tons eq CO2", delta = str((CO2_HFO-CO2_GPL)*100/CO2_GPL) + " % de tons eq CO2 gagnée")
-    
-    
-    
+    #Optimisation proposal 
     if st.session_state.choose == "Proposition d'optimisation" :
+        #Show the benefits to use an econimizer
         if st.session_state.conso != 0:
             if st.session_state.eco :
                 st.subheader("Vous possédez déjà un économiseur")
             else :
                 st.subheader("Améliorer son rendement à l'aide d'un économiseur")
             
-                co1, co2 = st.columns(2,gap="medium")
-                with co1:
-                    st.title("Economiseur HFO")
-                    st.write("On peut gagner 5% de consommation de HFO à l'aide d'un économiseur sur ce type de fuel")
-                    st.subheader("Voici la consommation espérée en utilisant un économiseur :")
-                    st.title(str(round(0.95*st.session_state.conso))+ " tonnes par an")
-                    st.write("")
-                    st.write("")
-                    colon1, colon2 = st.columns(2)
-                    with colon1 :
-                        st.metric(label = "Coût molécule sans économiseur ", value = (str(round(st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money) )
-                    with colon2 :
-                        st.metric(label = "Coût molécule avec économiseur ", value = (str(round(0.95 * st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money),delta = str(round(0.05 * st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money)
-                with co2 : 
-                    st.title("Economiseur GPL")
-                    st.write("On peut gagner 7.5% de consommation de HFO à l'aide d'un économiseur sur ce type de fuel")
-                    st.subheader("Voici la consommation espérée en utilisant un économiseur :")
-                    st.title(str(round(0.925*round(st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800))))+ "tonnes par an")
-                    st.write("")
-                    st.write("")
-                    colo1, colo2 = st.columns(2)
-                    with colo1:
-                        st.metric(label = "Coût molécule sans économiseur ", value = (str(round(round(st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800))))+ st.session_state.money) )
-                    with colo2:
-                        st.metric(label = "Coût molécule avec économiseur ", value = (str(round(0.925 * st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800)))+ st.session_state.money),delta = str(round(0.075 * st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800)))+ st.session_state.money)
-                with st.expander("Information investissement"):
-                    st.write("A noter que généralement, le coût d'un économiseur pour le HFO est **2 fois plus élevé** que pour le GPL")
+            co1, co2 = st.columns(2,gap="medium")
+            with co1:
+                st.title("Economiseur HFO")
+                st.write("On peut gagner 5% de consommation de HFO à l'aide d'un économiseur sur ce type de fuel")
+                st.subheader("Voici la consommation espérée en utilisant un économiseur :")
+                st.title(str(round(0.95*st.session_state.conso))+ " tonnes par an")
+                st.write("")
+                st.write("")
+                colon1, colon2 = st.columns(2)
+                with colon1 :
+                    st.metric(label = "Coût molécule sans économiseur ", value = (str(round(st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money) )
+                with colon2 :
+                    st.metric(label = "Coût molécule avec économiseur ", value = (str(round(0.95 * st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money),delta = str(round(0.05 * st.session_state.conso*st.session_state.price_hfo))+ st.session_state.money)
+            with co2 : 
+                st.title("Economiseur GPL")
+                st.write("On peut gagner 7.5% de consommation de HFO à l'aide d'un économiseur sur ce type de fuel")
+                st.subheader("Voici la consommation espérée en utilisant un économiseur :")
+                st.title(str(round(0.925*round(st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800))))+ " tonnes par an")
+                st.write("")
+                st.write("")
+                colo1, colo2 = st.columns(2)
+                with colo1:
+                    st.metric(label = "Coût molécule sans économiseur ", value = (str(round(round(st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800))))+ st.session_state.money) )
+                with colo2:
+                    st.metric(label = "Coût molécule avec économiseur ", value = (str(round(0.925 * st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800)))+ st.session_state.money),delta = str(round(0.075 * st.session_state.gpl_price * st.session_state.rend_ram * ((100-st.session_state.rand_gpl)/100) * 11774 * (st.session_state.conso/13800)))+ st.session_state.money)
+            with st.expander("Information investissement"):
+                st.write("A noter que généralement, le coût d'un économiseur pour le HFO est **2 fois plus élevé** que pour le GPL")
             
         else :  
+            #Demand to complete the Home page information
             st.write("Veuillez renseigner votre consommation")
 
-
-
-
-
         
-#English language
-if st.session_state.lang == 'English' :       
+
+
+
+#Same in English language
+if en :       
     val = st.button("Generate the invoive", on_click = gen_pdf())
     if val == True : 
         with open("/Users/nass/Documents/pdf_generated.pdf","rb") as file : 
