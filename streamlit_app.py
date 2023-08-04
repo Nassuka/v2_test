@@ -344,15 +344,15 @@ with st.sidebar :
     #Select language
     lang = st.selectbox( "Langues",("Français", "English"))
     
-    scol1, scol2 = st.columns([1.8,3])
-    scol2 .image("/Users/nass/Documents/Streamlit-app/drap_fr.png",width = 30)
-    scol2.write("")
-    scol2 .image("/Users/nass/Documents/Streamlit-app/drap_en.webp",width = 30)
+    #scol1, scol2 = st.columns([1.8,3])
+    #scol2 .image("/Users/nass/Documents/Streamlit-app/drap_fr.png",width = 30)
+    #scol2.write("")
+    #scol2 .image("/Users/nass/Documents/Streamlit-app/drap_en.webp",width = 30)
     
-    fr  = scol1.checkbox("Français" , key = "fr", on_change = change_fr_to_en)
-    scol1.write("")
-    scol1.write("")
-    en = scol1.checkbox("English", key = "en", on_change = change_en_to_fr)
+    #fr  = scol1.checkbox("Français" , key = "fr", on_change = change_fr_to_en)
+    #scol1.write("")
+    #scol1.write("")
+    #en = scol1.checkbox("English", key = "en", on_change = change_en_to_fr)
     
 
 #French language
