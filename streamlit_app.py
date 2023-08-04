@@ -6,12 +6,12 @@ import altair as alt
 import plotly.express as px
 import os
 
-#from fonctions import calcul_conso_gpl,rendement, calcul_energy_hfo, price_hfo, price_gpl, euro_to_dollar, dollar_to_CFA, dollar_to_ZAR, dollar_to_din_tun, dollar_to_mur, space_in_numbers, courbe
-#from gen_pdf import gen_pdf
-#from bokeh.plotting import figure
+from fonctions import calcul_conso_gpl,rendement, calcul_energy_hfo, price_hfo, price_gpl, euro_to_dollar, dollar_to_CFA, dollar_to_ZAR, dollar_to_din_tun, dollar_to_mur, space_in_numbers, courbe
+from gen_pdf import gen_pdf
+from bokeh.plotting import figure
 
-#import altair as alt
-#from vega_datasets import data
+import altair as alt
+from vega_datasets import data
 
 #Tab icon and name
 st.set_page_config(page_title='Comparaison HFO vs GPL',page_icon='Logo_TotalEnergies.png', initial_sidebar_state="expanded", layout = "wide")
@@ -313,6 +313,8 @@ with st.sidebar :
     if 'coef_filtre' not in st.session_state :
         st.session_state['coef_filtre'] = 1
         
+    if 'lang' not in st.session_state :
+        st.session_state['lang'] = 'Français'
     
         
     #Functions to change language
@@ -344,19 +346,9 @@ with st.sidebar :
     #Select language
     lang = st.selectbox( "Langues",("Français", "English"))
     
-    #scol1, scol2 = st.columns([1.8,3])
-    #scol2 .image("/Users/nass/Documents/Streamlit-app/drap_fr.png",width = 30)
-    #scol2.write("")
-    #scol2 .image("/Users/nass/Documents/Streamlit-app/drap_en.webp",width = 30)
     
-    #fr  = scol1.checkbox("Français" , key = "fr", on_change = change_fr_to_en)
-    #scol1.write("")
-    #scol1.write("")
-    #en = scol1.checkbox("English", key = "en", on_change = change_en_to_fr)
-    
-
 #French language
-if fr :
+if st.session_state.lang == 'Français' :
     #Home page
     if st.session_state.choose == "Page d'accueil":
         #Enter informations
@@ -1172,7 +1164,7 @@ if fr :
 
 
 #Same in English language
-if en :       
+if st.session_state.lang == 'English'  :       
     val = st.button("Generate the invoive", on_click = gen_pdf())
     if val == True : 
         with open("/Users/nass/Documents/pdf_generated.pdf","rb") as file : 
