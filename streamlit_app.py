@@ -1184,7 +1184,7 @@ if st.session_state.lang == 'Français' :
         col1, col2 = st.columns(2)
         with col1 :
             st.title("HFO")
-            st.metric("Coûts totaux du HFO", value = space_in_numbers(str(st.session_state.tot_cost_hfo)+ st.session_state.money))
+            st.metric("Coûts totaux du HFO", value = space_in_numbers(str(st.session_state.tot_cost_hfo))+ st.session_state.money)
             st.write("")
             st.metric("Coût de la molécule", value = space_in_numbers(str(round(st.session_state.conso * st.session_state.price_hfo))) + st.session_state.money)
             st.write("")
@@ -1262,7 +1262,7 @@ if st.session_state.lang == 'Français' :
             worksheet = writer.sheets['Coûts estimés']
             format1 = workbook.add_format({'num_format': '0.00'}) 
             worksheet.set_column('A:A', None, format1)  
-            writer.save()
+            writer.close()
             processed_data = output.getvalue()
             return processed_data
         
