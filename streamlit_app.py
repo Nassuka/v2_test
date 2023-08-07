@@ -1,20 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue May 30 09:32:03 2023
-
-@author: nass
-"""
 import streamlit as st
 import numpy as np
 import pandas as pd
 import altair as alt
 import plotly.express as px
-import os
+#import os
 
 #from fonctions import calcul_conso_gpl,rendement, calcul_energy_hfo, price_hfo, price_gpl, euro_to_dollar, dollar_to_CFA, dollar_to_ZAR, dollar_to_din_tun, dollar_to_mur, space_in_numbers, courbe
-from gen_pdf import gen_pdf
-from bokeh.plotting import figure
+#from gen_pdf import gen_pdf
+#from bokeh.plotting import figure
 from io import BytesIO
 from pyxlsb import open_workbook as open_xlsb
 
