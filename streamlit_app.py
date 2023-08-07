@@ -11,8 +11,8 @@ import plotly.express as px
 from io import BytesIO
 from pyxlsb import open_workbook as open_xlsb
 
-import altair as alt
-from vega_datasets import data
+#import altair as alt
+#from vega_datasets import data
 
 
 def calcul_energy_hfo(conso):
