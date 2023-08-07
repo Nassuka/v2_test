@@ -82,7 +82,7 @@ def rendement(a):
     return l
 
 #Tab icon and name
-st.set_page_config(page_title='Comparaison HFO vs GPL',page_icon='/Users/nass/Documents/Streamlit-app/Logo_TotalEnergies.png', initial_sidebar_state="expanded", layout = "wide")
+st.set_page_config(page_title='Comparaison HFO vs GPL',page_icon='Logo_TotalEnergies.png', initial_sidebar_state="expanded", layout = "wide")
 
 #Application title
 st.header('Application de comparaison des coûts de fonctionnement entre le HFO et le GPL')
